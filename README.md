@@ -10,6 +10,8 @@ Works with any AI agent that supports skills or custom instructions — opencode
 spec-writer/
 ├── spec-writer/
 │   └── SKILL.md           # Spec authoring skill — interactive dialogue, validation rules, antipattern detection
+├── spec-writer-setup/
+│   └── SKILL.md           # Context adapter — scans projects and customizes TDD agents to idiomatic patterns
 ├── agents/
 │   ├── tdd-red.agent.md   # Red phase — writes failing tests from specs
 │   ├── tdd-green.agent.md # Green phase — minimum implementation to pass tests
@@ -42,6 +44,20 @@ Three language-agnostic agents that implement the Red → Green → Refactor cyc
 | `tdd-refactor` | Improves quality, security, idioms | Yes | No |
 
 Each agent is self-contained — hand off between them as you progress through the TDD cycle.
+
+### Context Adapter (`spec-writer-setup/SKILL.md`)
+
+Scans a target project to extract its idiomatic patterns — test framework, assertion style, code structure, naming conventions, tooling commands, stub conventions for compiled languages — then surgically adapts the generic TDD agents: replacing pseudocode examples, tool commands, and type definitions with project-specific equivalents. Everything else (workflow, rules, guidelines) is preserved as-is.
+
+**Commands:**
+
+| Command | Description |
+|---------|-------------|
+| `scan [path]` | Analyze a project and produce a `context-report.md` |
+| `adapt [agent\|all]` | Apply targeted edits to TDD agent(s) using the context report |
+| `scan-and-adapt [path]` | Full pipeline: scan then adapt all three agents |
+
+The scan reads READMEs, agent files, package manifests, test configs, linter/formatter configs, existing test files, MCP configurations, and documentation. The adapt phase copies the base agents to the target project, then edits only the code examples, commands, and type definitions — prose, rules, and workflow stay untouched. For compiled languages, it can also insert a stub-creation step into the red phase agent.
 
 ## Installation
 
@@ -83,6 +99,30 @@ Once a spec exists, use the TDD agents in sequence:
 
 Produces a pass/fail report checking structural integrity, security requirements, edge case coverage, and test traceability.
 
+### 4. Adapt TDD Agents to Your Project
+
+Scan your project to extract its patterns, then adapt the TDD agents:
+
+```
+> scan-and-adapt /path/to/your/project
+
+# The agent will:
+# - Read your README, test configs, package manifests
+# - Find and parse existing test files
+# - Extract test framework, assertion style, naming conventions
+# - Generate context-report.md with all findings
+# - Copy the base TDD agents and apply targeted edits:
+#   replace pseudocode with idiomatic code, swap generic
+#   commands for real ones, add stub steps for compiled languages
+```
+
+Or run the steps separately:
+
+```
+> scan /path/to/your/project   # produces context-report.md
+> adapt all                     # applies edits to all three agents
+```
+
 ## Spec Format
 
 Each spec is a markdown file with YAML frontmatter:
@@ -115,6 +155,8 @@ The skill and agents are language-agnostic. They use pseudocode in examples — 
 - **Data layer**: ORM, raw SQL, or whatever your project uses
 - **HTTP testing**: Your framework's test client or supertest equivalents
 - **Linting/formatting**: Your project's existing tools
+
+The `spec-writer-setup` skill automates this — run `scan-and-adapt` on your project to adapt the agents without manual editing.
 
 ## Philosophy
 
