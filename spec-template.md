@@ -8,159 +8,99 @@ author: ""
 related_specs: []  # List any related spec files
 ---
 
-# [Feature Name] Specification
+# [Feature Name]
 
-> **Brief description:** One or two sentences describing what this feature does
-> and why it exists.
+## Metadata
+- **ID**: SPEC-XXX (auto-incremented)
+- **Status**: Draft | Ready | Implemented | Deprecated
+- **Author**: <name or handle>
+- **Created**: YYYY-MM-DD
+- **Last Updated**: YYYY-MM-DD
+- **Depends On**: <list of other spec IDs or "None">
 
-## Overview
-<!-- Describe the feature in detail. What problem does it solve?
-     Who are the users? What is the expected behavior?
-     Provide enough context for a developer to understand the "why" -->
+## Purpose & Scope
+<!-- What this spec covers AND what it explicitly does NOT cover. -->
+
+## Definitions
+<!-- Terminology table. Every domain term used in this spec must appear here. -->
+| Term | Definition |
+|------|-----------|
+|      |           |
 
 ## Requirements
+<!-- Every requirement gets a unique ID: REQ-XXX -->
+| ID | Description | Priority | Rationale |
+|----|------------|----------|-----------|
+| REQ-001 | | Must / Should / Could | |
 
-### Functional Requirements
-<!-- List each requirement as a numbered item.
-     Use "SHALL" or "MUST" for mandatory requirements.
-     Use "SHOULD" for recommended behavior.
-     Use "MAY" for optional behavior. -->
+## Constraints
+<!-- Technical, business, or regulatory limits: CON-XXX -->
+| ID | Description | Source |
+|----|------------|--------|
+| CON-001 | | |
 
-1. **FR-001:** The system SHALL [describe behavior]
-2. **FR-002:** The system SHALL [describe behavior]
-3. **FR-003:** The system SHOULD [describe behavior]
+## Security
+<!-- Threat surface and mitigations: SEC-XXX -->
+| ID | Requirement | Mitigation |
+|----|------------|------------|
+| SEC-001 | | |
 
-### Non-Functional Requirements
-<!-- Performance, scalability, reliability requirements -->
+## Interfaces & Data Contracts
+<!-- API endpoints, CLI commands, message formats, function signatures, etc. -->
+<!-- For each interface, define: method/verb, path/command, input, success output, error outputs. -->
 
-- **Performance:** [e.g., "Response time < 200ms at p99"]
-- **Scalability:** [e.g., "Support 1000 concurrent users"]
-- **Availability:** [e.g., "99.9% uptime"]
+### Interface: `METHOD /path`
 
-## API / Interface Design
-<!-- Define the endpoint(s) or interface(s) this spec covers.
-     Adapt this section to your project: HTTP endpoints, CLI commands,
-     library function signatures, message queue handlers, etc. -->
+**Description**: <one line>
 
-### `[METHOD] /api/v1/[resource]`
-
-**Request:**
-
+**Request/Input**:
 ```json
-{
-  "field_name": "string (required)",
-  "optional_field": "string (optional)"
-}
+{ "field": "type — description" }
 ```
 
-**Response (201 Created):**
-
+**Success Response** (`HTTP 2XX` or equivalent success status):
 ```json
-{
-  "id": "uuid",
-  "field_name": "string",
-  "created_at": "ISO 8601"
-}
+{ "field": "type — description" }
 ```
 
-**Error Responses:**
-
-| Status | Code | Condition |
-|--------|------|-----------|
-| 400 | `VALIDATION_ERROR` | Invalid input |
-| 409 | `CONFLICT` | Resource already exists |
-| 500 | `INTERNAL_ERROR` | Unexpected server error |
-
-<!-- Add more endpoints/interfaces as needed -->
-
-## Data Model
-
-<!-- Describe any new or modified database tables, schemas, or data structures -->
-
-### `table_name`
-
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| id | uuid | PRIMARY KEY, DEFAULT gen_random_uuid() | Unique identifier |
-| created_at | timestamptz | NOT NULL, DEFAULT now() | Creation timestamp |
-| updated_at | timestamptz | NOT NULL, DEFAULT now() | Last update timestamp |
-
-## Business Rules
-
-<!-- Any domain logic, validation rules, state machines, etc. -->
-
-1. **Rule:** [Description of business logic]
-2. **Rule:** [Description of constraint]
-
-## Validation Rules
-
-<!-- Detailed input validation rules -->
-
-| Field | Rule | Error Message |
-|-------|------|---------------|
-| email | Required, valid email format | "A valid email is required" |
-| password | Required, min 8 chars | "Password must be at least 8 characters" |
-
-## Edge Cases
-
-<!-- What happens in unusual situations? -->
-
-1. **[Scenario]:** [Expected behavior]
-2. **[Scenario]:** [Expected behavior]
-3. **[Scenario]:** [Expected behavior]
+**Error Responses**:
+| Status | Error Code | Description |
+|--------|-----------|-------------|
+| 4XX/5XX | `ERR_CODE` | |
 
 ## Acceptance Criteria
+<!-- GIVEN-WHEN-THEN format. Minimum 3 per spec. -->
+<!-- AC-X: Given <precondition>, when <action>, then <expected outcome>. -->
 
-<!-- Each criterion should be independently testable.
-     Reference these in test files as AC-001, AC-002, etc. -->
+### AC-1
+**Given** …
+**When** …
+**Then** …
 
-- [ ] **AC-001:** [Given [context], when [action], then [expected result]
-- [ ] **AC-002:** [Given [context], when [action], then [expected result]
-- [ ] **AC-003:** [Given [context], when [action], then [expected result]
-- [ ] **AC-004:** [Given [context], when [action], then [expected result]
-- [ ] **AC-005:** [Given [context], when [action], then [expected result]
+### AC-2
+**Given** …
+**When** …
+**Then** …
+
+### AC-3
+**Given** …
+**When** …
+**Then** …
 
 ## Test Strategy
+<!-- Which tests verify which acceptance criteria. -->
+<!-- Levels: unit / integration / e2e -->
 
-<!-- How will this feature be tested? Adapt test categories to your project. -->
+| Test ID | Acceptance Criterion | Level | Approach |
+|---------|---------------------|-------|----------|
+| TST-001 | AC-1 | unit / integration / e2e | |
 
-### Unit Tests
+## Edge Cases & Error Scenarios
+<!-- Every row must include an HTTP status code where applicable. -->
 
-<!-- What pure logic needs testing? -->
+| ID | Scenario | Expected Behavior | HTTP Status |
+|----|----------|-------------------|-------------|
+| EDGE-001 | | | |
 
-- [ ] [Description of unit test]
-
-### Integration Tests
-
-<!-- What endpoints, database interactions, or external integrations need testing? -->
-
-- [ ] [Description of integration test]
-
-### Snapshot / Contract Tests
-
-<!-- What responses or interfaces should be snapshot-tested or contract-tested? -->
-
-- [ ] [Description of snapshot/contract test]
-
-## Security Considerations
-
-<!-- Security-specific requirements for this feature -->
-
-- [ ] [Security requirement]
-- [ ] [Security requirement]
-
-## Implementation Notes
-
-<!-- Optional: hints for implementation, dependencies, order of work -->
-
-- Depends on: [list dependencies]
-- Estimated complexity: [low | medium | high]
-- Suggested implementation order: [steps]
-
-## Changelog
-
-<!-- Track spec revisions -->
-
-| Version | Date | Changes |
-|---------|------|---------|
-| 0.1.0 | YYYY-MM-DD | Initial draft |
+## Rationale
+<!-- Why these design decisions? Link to prior art, ADRs, or trade-off analysis. -->

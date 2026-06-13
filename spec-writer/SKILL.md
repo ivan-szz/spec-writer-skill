@@ -1,7 +1,7 @@
 ---
 name: spec-writer
 description: "Interactive specification authoring. Guides the user through a structured dialogue to gather requirements, then produces deterministic, reviewable .md specs. Use when the user wants to create, refine, or validate a feature specification."
-version: 2.0.0
+version: 2.1.0
 user-invocable: true
 argument-hint: "[write|refine|validate] [target]"
 ---
@@ -20,7 +20,7 @@ Before doing anything:
 
 1. **Read the project context.** Check for `AGENTS.md`, `CLAUDE.md`, or similar project instruction files. Understand the tech stack, conventions, and existing specs.
 2. **Check for existing specs.** Look in `specs/` for any `.spec.md` files. If one exists for the requested feature, warn the user and ask whether to refine the existing one or create a new version.
-3. **Check for spec template.** If `specs/templates/spec-template.md` exists, load it as the structural reference.
+3. **Check for spec template.** Load `specs/spec-template.md` as the structural reference. This is the single source of truth for spec structure.
 
 ## Commands
 
@@ -140,106 +140,7 @@ If you're still guessing on a section, ask one more question about that section 
 
 ## Spec Template
 
-Every generated spec MUST contain every section below, in this order. Empty sections are not permitted — write `<!-- intentional: N/A with justification -->` with a one-line rationale if a section genuinely does not apply.
-
-```markdown
-# [Feature Name]
-
-## Metadata
-- **ID**: SPEC-XXX (auto-incremented)
-- **Status**: Draft | Ready | Implemented | Deprecated
-- **Author**: <name or handle>
-- **Created**: YYYY-MM-DD
-- **Last Updated**: YYYY-MM-DD
-- **Depends On**: <list of other spec IDs or "None">
-
-## Purpose & Scope
-<!-- What this spec covers AND what it explicitly does NOT cover. -->
-
-## Definitions
-<!-- Terminology table. Every domain term used in this spec must appear here. -->
-| Term | Definition |
-|------|-----------|
-|      |           |
-
-## Requirements
-<!-- Every requirement gets a unique ID: REQ-XXX -->
-| ID | Description | Priority | Rationale |
-|----|------------|----------|-----------|
-| REQ-001 | | Must / Should / Could | |
-
-## Constraints
-<!-- Technical, business, or regulatory limits: CON-XXX -->
-| ID | Description | Source |
-|----|------------|--------|
-| CON-001 | | |
-
-## Security
-<!-- Threat surface and mitigations: SEC-XXX -->
-| ID | Requirement | Mitigation |
-|----|------------|------------|
-| SEC-001 | | |
-
-## Interfaces & Data Contracts
-<!-- API endpoints, CLI commands, message formats, function signatures, etc. -->
-<!-- For each interface, define: method/verb, path/command, input, success output, error outputs. -->
-
-### Interface: `METHOD /path`
-
-**Description**: <one line>
-
-**Request/Input**:
-```json
-{ "field": "type — description" }
-```
-
-**Success Response** (`HTTP 2XX` or equivalent success status):
-```json
-{ "field": "type — description" }
-```
-
-**Error Responses**:
-| Status | Error Code | Description |
-|--------|-----------|-------------|
-| 4XX/5XX | `ERR_CODE` | |
-
-## Acceptance Criteria
-<!-- GIVEN-WHEN-THEN format. Minimum 3 per spec. -->
-<!-- AC-X: Given <precondition>, when <action>, then <expected outcome>. -->
-
-### AC-1
-**Given** …
-**When** …
-**Then** …
-
-### AC-2
-**Given** …
-**When** …
-**Then** …
-
-### AC-3
-**Given** …
-**When** …
-**Then** …
-
-## Test Strategy
-<!-- Which tests verify which acceptance criteria. -->
-<!-- Levels: unit / integration / e2e -->
-
-| Test ID | Acceptance Criterion | Level | Approach |
-|---------|---------------------|-------|----------|
-| TST-001 | AC-1 | unit / integration / e2e | |
-
-## Edge Cases & Error Scenarios
-<!-- Every row must include an HTTP status code where applicable. -->
-
-| ID | Scenario | Expected Behavior | HTTP Status |
-|----|----------|-------------------|-------------|
-| EDGE-001 | | | |
-
-## Rationale
-<!-- Why these design decisions? Link to prior art, ADRs, or trade-off analysis. -->
-```
+The canonical template lives at `specs/spec-template.md`. Load it at the start of every `write` or `refine` command. Every generated spec MUST contain every section defined there, in that order. Empty sections are not permitted — write `<!-- intentional: N/A with justification -->` with a one-line rationale if a section genuinely does not apply.
 
 ---
 
