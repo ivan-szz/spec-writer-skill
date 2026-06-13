@@ -279,7 +279,7 @@ The adapt phase takes the context report and applies **targeted edits** to the b
 - Pseudocode example blocks → replaced with idiomatic project code
 - Generic tool commands (`run_test_suite`, `run_linter`, `run_formatter`) → replaced with project commands
 - Placeholder type definitions → replaced with project's actual types
-- The "Adapt to your stack" disclaimers → replaced with a customization note
+- The "Adapt to your stack" disclaimers → deleted (the frontmatter fields handle metadata)
 
 Everything else — prose, rules, checklists, handoff descriptions, workflow steps — is **copied verbatim** from the base agent.
 
@@ -295,7 +295,7 @@ For each agent being adapted:
 1. **Copy the base agent** to the target project (`<target-project>/agents/tdd-<phase>.agent.md`).
 2. **Identify edit targets** — find each pseudocode block, generic command, and placeholder type in the copied file.
 3. **Apply edits** — replace only the identified targets with project-specific equivalents from the context report.
-4. **Add the customization header** (see 2.5).
+4. **Add adaptation metadata** to the frontmatter (see 2.5).
 5. **Verify** — re-read the file and confirm only the intended edits were made; no surrounding prose was altered.
 
 If the target project already has agent files, read them first. If they already contain project-specific code, ask before overwriting. If they appear to be unmodified copies of the base, proceed with the update.
@@ -343,7 +343,7 @@ async fn test_get_user_returns_success() {
 }
 ```
 
-If the context report has no matching pattern for a pseudocode block, **leave the block as-is** and add a comment at the top: `<!-- TODO: replace with project-specific example -->`. Never invent code.
+If the context report has no matching pattern for a pseudocode block, **leave the block unchanged**. Never invent code, never add markers.
 
 #### Edit: Replace Generic Tool Commands
 
@@ -356,7 +356,7 @@ Find occurrences of `run_test_suite`, `run_linter`, `run_formatter`, and similar
 | `run_formatter` | `cargo fmt` |
 | `run_dependency_audit` | `cargo audit` |
 
-Only replace commands that the context report provides equivalents for. If no equivalent was found, leave the generic command and add `<!-- TODO: replace with project command -->`.
+Only replace commands that the context report provides equivalents for. If no equivalent was found, leave the generic command unchanged.
 
 #### Edit: Replace Placeholder Type Definitions
 
@@ -443,16 +443,22 @@ For other languages, adapt to whatever the idiomatic "not yet implemented" patte
 
 **Important:** This edit only applies to the red phase agent. The green phase agent already assumes stubs exist and builds on them. The refactor phase agent is unaffected.
 
-### 2.5 Agent Header
+### 2.5 Frontmatter Fields
 
-Insert a header at the top of each adapted agent (after the frontmatter, before the title):
+Add adaptation metadata to the YAML frontmatter instead of a separate header block:
 
-```markdown
-> **Customized for <project-name>.** Adapted by `spec-writer-setup` on YYYY-MM-DD.
-> Only code examples, commands, and type definitions were changed. Workflow,
-> rules, and guidelines are preserved from the base agent.
-> Context report: `context-report.md`
+```yaml
+---
+name: tdd-green
+version: 1.0.0
+adapted-by: spec-writer-setup
+adapted-on: YYYY-MM-DD
+---
 ```
+
+Add `adapted-by` and `adapted-on` fields. Keep the original `name`, `version`, `description`, and `tools` fields unchanged. This keeps all metadata where it belongs — in the frontmatter — without adding a visible blockquote to the document body.
+
+If the base agent already has a `version` field, preserve its value. The adaptation doesn't bump the version.
 
 ### 2.6 Output Files
 
@@ -471,13 +477,13 @@ Write adapted agents to the target project:
 
 - **Edit in place, don't rewrite.** For each agent, copy the base file and apply specific edits. Do not regenerate the file from memory or paraphrase sections.
 - **One edit target at a time.** Identify a specific block or command, replace it, move to the next. Don't batch multiple sections into one large replacement.
-- **Never invent patterns.** If the context report doesn't capture a pattern, leave the original with a `<!-- TODO -->` marker.
+- **Never invent patterns.** If the context report doesn't capture a pattern, leave the original unchanged.
 - **Preserve the agent's role.** Red still only writes tests. Green still only writes implementation. Refactor still never modifies tests. The customization is about HOW, not WHAT.
 - **Preserve all prose.** Workflow descriptions, rules, checklists, handoff steps, guidelines — these are the agent's brain. Do not rephrase, restructure, or summarize them.
 - **Insertions are edits too.** Adding a stub-creation step to the red phase for compiled languages is an allowed edit. The inserted step must follow the same style and structure as existing steps in the agent.
 - **Stubs belong in red, not green.** The stub step goes in the red phase agent. Green replaces stubs with real implementations.
-- **Include the context report path** in each agent's header so future runs know where to find it.
-- **Diff mentally before writing.** Before finalizing each agent, mentally compare it to the base. The only differences should be the edits listed in 2.4 and the header in 2.5.
+- **Include the context report path** in the frontmatter so future runs know where to find it.
+- **Diff mentally before writing.** Before finalizing each agent, mentally compare it to the base. The only differences should be the edits listed in 2.4 and the frontmatter fields in 2.5.
 
 ---
 
@@ -490,7 +496,7 @@ When the user runs `scan-and-adapt [path]`:
 3. Ask: "Does this look right? Anything to adjust?"
 4. After confirmation, run adapt for all three agents.
 5. For each agent, report what was edited: which blocks were replaced, which commands were updated, which types were changed.
-6. If any edits were skipped (no matching pattern found), list the `<!-- TODO -->` markers left behind.
+6. If any edits were skipped (no matching pattern found), list which pseudocode blocks or commands were left unchanged.
 
 ---
 
@@ -498,9 +504,9 @@ When the user runs `scan-and-adapt [path]`:
 
 After adapting agents, verify the edits were applied correctly:
 
-1. **Only intended edits were made.** Compare each adapted agent to its base — the only differences should be the edits from the catalog (2.4) and the header (2.5). No prose should be rephrased or restructured.
-2. **All pseudocode blocks were replaced** or marked with `<!-- TODO -->`.
-3. **All commands reference real tools** from the project (not generic placeholders), or are marked with `<!-- TODO -->`.
+1. **Only intended edits were made.** Compare each adapted agent to its base — the only differences should be the edits from the catalog (2.4) and the frontmatter fields (2.5). No prose should be rephrased or restructured. No comments, markers, or annotations were added to the body.
+2. **All pseudocode blocks were replaced** or left unchanged (no pattern found).
+3. **All commands reference real tools** from the project, or were left unchanged (no equivalent found).
 4. **Agent roles are preserved** (Red = tests only, Green = implementation only, Refactor = no test changes).
 
 ---
@@ -508,7 +514,7 @@ After adapting agents, verify the edits were applied correctly:
 ## Notes
 
 - The context report is a living document. Re-run `scan` after major project changes (new framework, new test tooling, etc.).
-- The skill works best when the project has existing tests to read. For greenfield projects with no tests yet, the adaptation will be lighter (based on config and docs only) — most pseudocode blocks will get `<!-- TODO -->` markers.
+- The skill works best when the project has existing tests to read. For greenfield projects with no tests yet, the adaptation will be lighter (based on config and docs only) — most pseudocode blocks might remain unchanged.
 - If the project uses multiple languages (e.g., TypeScript frontend + Rust backend), scan each separately and produce language-specific agent copies.
 - MCP configurations found during the scan are noted in the context report but not directly used in agent customization — they may inform future extensions.
 - The base agents in `agents/` are never modified. Adapted copies go to the target project. This means you can adapt the same base agents for multiple projects.

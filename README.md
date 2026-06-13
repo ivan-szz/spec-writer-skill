@@ -45,7 +45,7 @@ Three language-agnostic agents that implement the Red → Green → Refactor cyc
 
 Each agent is self-contained — hand off between them as you progress through the TDD cycle.
 
-### Context Adapter (`spec-writer-setup/SKILL.md`)
+### Spec Writer Setup (`spec-writer-setup/SKILL.md`)
 
 Scans a target project to extract its idiomatic patterns — test framework, assertion style, code structure, naming conventions, tooling commands, stub conventions for compiled languages — then surgically adapts the generic TDD agents: replacing pseudocode examples, tool commands, and type definitions with project-specific equivalents. Everything else (workflow, rules, guidelines) is preserved as-is.
 
