@@ -270,7 +270,7 @@ src/
 
 ## Phase 2 — Adapt
 
-The adapt phase takes the context report and applies **targeted edits** to the base TDD agents. It does not rewrite them — it copies the base agents to the target project, then surgically replaces only the parts that need to change: pseudocode blocks, generic commands, placeholder types. Everything else stays exactly as-is.
+The adapt phase takes the context report and applies **targeted edits** to the base TDD agents. It does not replace them — it updates the base agents and surgically replaces only the parts that need to change: pseudocode blocks, generic commands, placeholder types. Everything else stays exactly as-is.
 
 ### 2.1 Core Principle
 
@@ -279,7 +279,7 @@ The adapt phase takes the context report and applies **targeted edits** to the b
 - Pseudocode example blocks → replaced with idiomatic project code
 - Generic tool commands (`run_test_suite`, `run_linter`, `run_formatter`) → replaced with project commands
 - Placeholder type definitions → replaced with project's actual types
-- The "Adapt to your stack" disclaimers → deleted (the frontmatter fields handle metadata)
+- The "Adapt to your stack" disclaimers → replaced with project-specific conventions
 
 Everything else — prose, rules, checklists, handoff descriptions, workflow steps — is **copied verbatim** from the base agent.
 
@@ -292,7 +292,7 @@ Everything else — prose, rules, checklists, handoff descriptions, workflow ste
 
 For each agent being adapted:
 
-1. **Copy the base agent** to the target project (`<target-project>/agents/tdd-<phase>.agent.md`).
+1. **Copy the base agent** in the same folder to keep track of it (`base/tdd-<phase>.agent.md`).
 2. **Identify edit targets** — find each pseudocode block, generic command, and placeholder type in the copied file.
 3. **Apply edits** — replace only the identified targets with project-specific equivalents from the context report.
 4. **Add adaptation metadata** to the frontmatter (see 2.5).
@@ -405,8 +405,19 @@ Find directory paths in prose or code that don't match the project's layout. Rep
 Find the blockquote that says:
 > **Adapt to your stack.** This agent is language-agnostic. Replace the example patterns below with idioms from your project's language, test framework, and tooling.
 
-Replace with:
-> **Customized for \<project-name\>.** This agent was adapted to your project's patterns on YYYY-MM-DD. Verify the examples match your current conventions — re-run `spec-writer-setup scan-and-adapt` after significant changes.
+Replace the entire blockquote with a concise "Project Conventions" summary drawn from the context report — the key patterns the agent needs most often while working. Keep it to 4-6 lines. Include:
+
+- **Language & test framework** and the test command
+- **Lint/format commands**
+- **Key conventions**: error handling pattern, naming style, where types/handlers/DB access live
+
+Example:
+> **Project conventions:** Rust 2021 · `cargo test -p server` · `cargo clippy -- -D warnings` · `cargo fmt`
+> Errors: `Result<T, AppError>` in `server/src/error.rs`, propagate with `?`
+> Types: repository structs in `server/src/repository/`, DTOs in `server/src/schema/`
+> Handlers: axum extractors, `State<S: Trait>` for testability, `tower::ServiceExt::oneshot` in tests
+
+Derive the content from the context report — don't invent conventions.
 
 #### Edit: Add Language-Specific Workflow Steps
 
