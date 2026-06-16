@@ -181,6 +181,12 @@ src/
 
 Adapt the structure to your language's conventions.
 
+### 2k. Prune Comments
+
+Remove excessive comments. Delete ones that restate the code, commented-out
+code, stale comments, and leftover Red/Green scaffolding (`// Arrange`, `// stub`).
+Keep only comments that explain **why** — rationale, trade-offs, doc comments.
+
 ---
 
 ## 3. Verification Loop
@@ -235,5 +241,7 @@ Produce a summary:
 - **One change at a time.** Refactor incrementally, verify after each step.
 - **Run linter and formatter** as part of every change cycle.
 - **Don't add features.** This phase is about quality, not new functionality.
+- **Prune comments.** Remove redundant, stale, and commented-out code; keep only
+  comments that explain why.
 - **Document decisions.** If you deviate from the checklist, explain why.
 - **Security is not optional.** If you see a vulnerability, fix it or flag it.
