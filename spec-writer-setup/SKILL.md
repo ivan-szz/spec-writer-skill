@@ -292,7 +292,7 @@ Everything else — prose, rules, checklists, handoff descriptions, workflow ste
 
 For each agent being adapted:
 
-1. **Copy the base agent** in the same folder to keep track of it (`base/tdd-<phase>.agent.md`).
+1. **Copy the base agent** in the same folder to keep track of it (`base/tdd-<phase>-base.agent.md`). In the copy's frontmatter, append `-base` to the `name` field (e.g., `tdd-red` → `tdd-red-base`) so it doesn't collide with the adapted agent, and set `user-invocable: false` so it isn't exposed as a runnable agent. The copy is a reference snapshot only.
 2. **Identify edit targets** — find each pseudocode block, generic command, and placeholder type in the copied file.
 3. **Apply edits** — replace only the identified targets with project-specific equivalents from the context report.
 4. **Add adaptation metadata** to the frontmatter (see 2.5).
@@ -478,10 +478,14 @@ Write adapted agents to the target project:
 ```
 <target-project>/
 ├── agents/
-│   ├── tdd-red.agent.md       ← adapted Red Phase
-│   ├── tdd-green.agent.md     ← adapted Green Phase
-│   └── tdd-refactor.agent.md  ← adapted Refactor Phase
-├── context-report.md          ← the scan output
+│   ├── tdd-red.agent.md            ← adapted Red Phase
+│   ├── tdd-green.agent.md          ← adapted Green Phase
+│   ├── tdd-refactor.agent.md       ← adapted Refactor Phase
+│   └── base/
+│       ├── tdd-red-base.agent.md       ← base snapshot (name: tdd-red-base, user-invocable: false)
+│       ├── tdd-green-base.agent.md     ← base snapshot (name: tdd-green-base, user-invocable: false)
+│       └── tdd-refactor-base.agent.md  ← base snapshot (name: tdd-refactor-base, user-invocable: false)
+├── context-report.md               ← the scan output
 ```
 
 ### 2.7 Adapt Rules
