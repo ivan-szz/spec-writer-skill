@@ -1,9 +1,9 @@
 ---
 name: spec-writer
 description: "Interactive specification authoring. Guides the user through a structured dialogue to gather requirements, then produces deterministic, reviewable .md specs. Use when the user wants to create, refine, or validate a feature specification."
-version: 1.0.0
-user-invocable: true
-argument-hint: "[write|refine|validate] [target]"
+metadata:
+  version: "1.0.0"
+  argument-hint: "[write|refine|validate] [target]"
 ---
 
 # Spec Writer Skill

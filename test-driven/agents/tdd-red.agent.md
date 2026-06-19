@@ -1,12 +1,12 @@
 ---
 name: tdd-red
+mode: primary
+color: "#fb2c36"
 description: >
   TDD Red Phase agent. Reads feature specs from the specs/ directory and
   generates failing tests that capture the expected behavior before any
   implementation exists. One test at a time — verify it fails — then
   hand off to the Green Phase agent.
-tools:
-  - test-runner
 ---
 
 # TDD Red Phase — Write Failing Tests

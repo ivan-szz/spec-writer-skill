@@ -1,13 +1,11 @@
 ---
 name: tdd-refactor
+mode: primary
+color: "#615fff"
 description: >
   TDD Refactor Phase agent. Improves code quality, applies language idioms,
   enforces security best practices, and removes duplication — all while keeping
   every test green. Runs linters and verifies tests after each change.
-tools:
-  - linter
-  - formatter
-  - test-runner
 ---
 
 # TDD Refactor Phase — Improve Code Quality

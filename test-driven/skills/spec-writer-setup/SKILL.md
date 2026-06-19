@@ -1,9 +1,9 @@
 ---
 name: spec-writer-setup
 description: "Scans a target project to extract idiomatic patterns (test framework, code style, architecture, conventions) and generates customized TDD agents that use the project's actual patterns instead of generic pseudocode. Use when the user wants to adapt the TDD agents to a specific codebase."
-version: 1.0.0
-user-invocable: true
-argument-hint: "[scan|adapt|scan-and-adapt] [path-or-agent]"
+metadata:
+  version: "1.0.0"
+  argument-hint: "[scan|adapt|scan-and-adapt] [path-or-agent]"
 ---
 
 # Context Adapter Skill

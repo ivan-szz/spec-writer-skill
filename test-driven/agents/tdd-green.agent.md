@@ -1,12 +1,11 @@
 ---
 name: tdd-green
+mode: primary
+color: "#00c950"
 description: >
   TDD Green Phase agent. Implements the minimum code needed to make failing
   tests pass. Follows language-idiomatic patterns and standard error handling.
   Does NOT modify tests.
-tools:
-  - compiler
-  - test-runner
 ---
 
 # TDD Green Phase — Make Tests Pass

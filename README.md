@@ -1,27 +1,50 @@
 # Spec Writer Skill
 
-Spec-driven development toolkit for AI coding agents. Write structured specifications, then implement them through a disciplined TDD workflow.
+Spec-driven development toolkit for AI coding agents. Two flavors: write specs and verify them your way, or go full TDD with red-green-refactor agents.
 
 Works with any AI agent that supports skills or custom instructions — opencode, Cursor, Claude Code, Copilot, Windsurf, Aider, and others.
+
+> **Note:** The `SKILL.md` and agent `.md` frontmatter is opencode-compatible. Skills use `name`, `description`, `metadata`. Agents use `description`, `mode`, `name`. For other harnesses (Cursor, Copilot, Windsurf, etc.), check your tool's docs and adjust the frontmatter — the content itself is harness-agnostic.
 
 ## What's Included
 
 ```
-spec-writer/
-├── spec-writer/
-│   └── SKILL.md           # Spec authoring skill — interactive dialogue, validation rules, antipattern detection
-├── spec-writer-setup/
-│   └── SKILL.md           # Context adapter — scans projects and customizes TDD agents to idiomatic patterns
-├── agents/
-│   ├── tdd-red.agent.md   # Red phase — writes failing tests from specs
-│   ├── tdd-green.agent.md # Green phase — minimum implementation to pass tests
-│   └── tdd-refactor.agent.md # Refactor phase — code quality, security, idioms
-└── spec-template.md       # Canonical spec template
+spec-writer-skill/
+├── spec-driven/                      # Spec-first workflow (no TDD required)
+│   ├── skills/spec-writer/
+│   │   └── SKILL.md                  # Interactive dialogue, validation, antipattern detection
+│   └── specs/
+│       └── spec-template.md          # Template with Verification section
+│
+├── test-driven/                      # Full TDD workflow
+│   ├── skills/
+│   │   ├── spec-writer/
+│   │   │   └── SKILL.md              # Same dialogue, with Test Strategy validation
+│   │   └── spec-writer-setup/
+│   │       └── SKILL.md              # Scans projects, adapts TDD agents to idiomatic patterns
+│   ├── agents/
+│   │   ├── tdd-red.agent.md          # Red phase — writes failing tests from specs
+│   │   ├── tdd-green.agent.md        # Green phase — minimum implementation to pass tests
+│   │   └── tdd-refactor.agent.md     # Refactor phase — code quality, security, idioms
+│   └── specs/
+│       └── spec-template.md          # Template with Test Strategy section
 ```
 
-### Spec Writer (`spec-writer/SKILL.md`)
+## Which Variant to Use
 
-An interactive skill that guides you through authoring specs via dialogue. It doesn't generate specs from one-liners — it asks, probes, and clarifies first.
+| | `spec-driven` | `test-driven` |
+|---|---|---|
+| **Spec authoring** | Interactive dialogue, probing, validation | Same |
+| **Verification section** | AC → method (unit, manual, demo, etc.) | AC → test (unit, integration, e2e) |
+| **Validation rules** | Structural, security, edge cases, verification traceability | All of spec-driven + test traceability |
+| **TDD agents** | No | Yes — red, green, refactor |
+| **Project adapter** | No | Yes — `spec-writer-setup` scans and adapts agents |
+
+Use `spec-driven` when you want structured specs without mandating a testing methodology. Use `test-driven` when you want the full spec → test → implement pipeline.
+
+## Spec Writer
+
+Both variants share the same core skill: an interactive dialogue that asks, probes, and clarifies before writing anything. No one-liner → spec generation.
 
 **Commands:**
 
@@ -29,11 +52,22 @@ An interactive skill that guides you through authoring specs via dialogue. It do
 |---------|-------------|
 | `write <feature>` | Start a dialogue to create a new spec |
 | `refine <spec-path>` | Review and improve an existing spec |
-| `validate [spec-path]` | Validate specs against structural, security, and testability rules |
+| `validate [spec-path]` | Validate specs against the rule set |
 
-**Validation rules include:** minimum acceptance criteria, error contracts per interface, unique requirement IDs, security checks for auth specs, edge case coverage, test traceability.
+### Validation Rules
 
-### TDD Agents (`agents/`)
+**spec-driven** validates:
+
+- Structural: minimum 3 ACs, interfaces with success + error, unique requirement IDs
+- Security: token lifecycle for auth specs, explicit input validation
+- Edge cases: HTTP status codes, concurrent access scenarios
+- Verification: every AC maps to ≥1 verification entry
+
+**test-driven** adds:
+
+- Test traceability: every AC maps to ≥1 test, test level specified (unit/integration/e2e)
+
+## TDD Agents (test-driven only)
 
 Three language-agnostic agents that implement the Red → Green → Refactor cycle:
 
@@ -45,75 +79,18 @@ Three language-agnostic agents that implement the Red → Green → Refactor cyc
 
 Each agent is self-contained — hand off between them as you progress through the TDD cycle.
 
-### Spec Writer Setup (`spec-writer-setup/SKILL.md`)
+### Adapt TDD Agents to Your Project
 
-Scans a target project to extract its idiomatic patterns — test framework, assertion style, code structure, naming conventions, tooling commands, stub conventions for compiled languages — then surgically adapts the generic TDD agents: replacing pseudocode examples, tool commands, and type definitions with project-specific equivalents. Everything else (workflow, rules, guidelines) is preserved as-is.
-
-**Commands:**
-
-| Command | Description |
-|---------|-------------|
-| `scan [path]` | Analyze a project and produce a `context-report.md` |
-| `adapt [agent\|all]` | Apply targeted edits to TDD agent(s) using the context report |
-| `scan-and-adapt [path]` | Full pipeline: scan then adapt all three agents |
-
-The scan reads READMEs, agent files, package manifests, test configs, linter/formatter configs, existing test files, MCP configurations, and documentation. The adapt phase copies the base agents to the target project, then edits only the code examples, commands, and type definitions — prose, rules, and workflow stay untouched. For compiled languages, it can also insert a stub-creation step into the red phase agent.
-
-## Installation
-
-This is a collection of skill and agent definition files. Install them into whichever AI tool you use.
-
-## Usage
-
-### 1. Write a Spec
-
-Ask your AI agent to write a spec for a feature. The skill will start a dialogue:
-
-```
-> write user registration
-
-# The agent will ask:
-# - What does it do? (one sentence)
-# - Who uses it?
-# - What's the primary interface?
-# - What's out of scope?
-# - What can go wrong?
-# ... then produce a structured .spec.md file
-```
-
-The spec-writer skill is designed with TDD in mind, but specs are useful on their own. Even if you don't follow a strict red-green-refactor cycle. The `write`, `refine`, and `validate` commands work independently of the TDD agents.
-
-### 2. Implement with TDD
-
-Once a spec exists, use the TDD agents in sequence:
-
-1. **Red** — `tdd-red` reads the spec and writes failing tests
-2. **Green** — `tdd-green` implements the minimum code to pass those tests
-3. **Refactor** — `tdd-refactor` cleans up without breaking tests
-
-### 3. Validate
-
-```
-> validate specs/user-register.spec.md
-```
-
-Produces a pass/fail report checking structural integrity, security requirements, edge case coverage, and test traceability.
-
-### 4. Adapt TDD Agents to Your Project
-
-Scan your project to extract its patterns, then adapt the TDD agents:
+The `spec-writer-setup` skill scans a target project to extract its idiomatic patterns — test framework, assertion style, code structure, naming conventions, tooling commands — then adapts the generic TDD agents.
 
 ```
 > scan-and-adapt /path/to/your/project
 
 # The agent will:
 # - Read your README, test configs, package manifests
-# - Find and parse existing test files
 # - Extract test framework, assertion style, naming conventions
 # - Generate context-report.md with all findings
-# - Copy the base TDD agents and apply targeted edits:
-#   replace pseudocode with idiomatic code, swap generic
-#   commands for real ones, add stub steps for compiled languages
+# - Copy the base TDD agents and apply targeted edits
 ```
 
 Or run the steps separately:
@@ -136,7 +113,9 @@ tags: [auth, user]
 ---
 ```
 
-Required sections: Purpose & Scope, Definitions, Requirements, Constraints, Security, Interfaces & Data Contracts, Acceptance Criteria, Test Strategy, Edge Cases & Error Scenarios, Rationale.
+**spec-driven** required sections: Purpose & Scope, Definitions, Requirements, Constraints, Security, Interfaces & Data Contracts, Acceptance Criteria, **Verification**, Edge Cases & Error Scenarios, Rationale.
+
+**test-driven** required sections: same but with **Test Strategy** instead of Verification.
 
 Acceptance criteria use Given-When-Then format:
 
@@ -147,21 +126,48 @@ Acceptance criteria use Given-When-Then format:
 **Then** a 201 response with the created user is returned
 ```
 
-## Adapting to Your Stack
+## Installation
 
-The skill and agents are language-agnostic. They use pseudocode in examples — replace with your project's idioms:
+### opencode
 
-- **Test framework**: Use whatever your stack provides (Jest, pytest, Go testing, RSpec, etc.)
-- **Data layer**: ORM, raw SQL, or whatever your project uses
-- **HTTP testing**: Your framework's test client or supertest equivalents
-- **Linting/formatting**: Your project's existing tools
+Copy the skill folder(s) you need into your project's `.opencode/skills/` directory (or `~/.config/opencode/skills/` for global access). OpenCode also supports `.claude/skills/` and `.agents/skills/` paths.
 
-The `spec-writer-setup` skill automates this — run `scan-and-adapt` on your project to adapt the agents without manual editing.
+**spec-driven** (no TDD):
+```bash
+mkdir -p .opencode/skills/spec-writer
+cp spec-driven/skills/spec-writer/SKILL.md .opencode/skills/spec-writer/
+mkdir -p specs
+cp spec-driven/specs/spec-template.md specs/
+```
+
+**test-driven** (full TDD):
+```bash
+# Skills
+mkdir -p .opencode/skills/spec-writer .opencode/skills/spec-writer-setup
+cp test-driven/skills/spec-writer/SKILL.md .opencode/skills/spec-writer/
+cp test-driven/skills/spec-writer-setup/SKILL.md .opencode/skills/spec-writer-setup/
+
+# Agents
+mkdir -p .opencode/agents
+cp test-driven/agents/tdd-red.agent.md .opencode/agents/
+cp test-driven/agents/tdd-green.agent.md .opencode/agents/
+cp test-driven/agents/tdd-refactor.agent.md .opencode/agents/
+
+# Template
+mkdir -p specs
+cp test-driven/specs/spec-template.md specs/
+```
+
+### Other tools
+
+Copy the `SKILL.md` and `spec-template.md` files into whatever location your tool expects. You may need to adjust the YAML frontmatter to match your tool's schema.
+
+> **Agent filenames:** Agent files go in `.opencode/agents/` (project) or `~/.config/opencode/agents/` (global). The filename becomes the agent name — e.g., `tdd-red.agent.md` creates a `tdd-red` agent. OpenCode also supports `.claude/agents/` and `.agents/` paths.
 
 ## Philosophy
 
 - **Specs before code.** Every feature starts with a written specification.
 - **Ambiguity is the enemy.** If something can be interpreted two ways, the spec isn't done.
-- **Testability is the test.** If you can't write a test for a requirement, rewrite the requirement.
+- **Verify everything.** Every acceptance criterion must map to a verification method — test, manual check, demo, whatever fits.
 - **Small is better.** One spec per focused feature.
 - **Specs are living documents.** Update them as you learn during implementation.
