@@ -18,7 +18,7 @@ Author well-structured specification documents through an interactive dialogue. 
 
 Before doing anything:
 
-1. **Read the project context.** Check for `AGENTS.md`, `CLAUDE.md`, or similar project instruction files. Understand the tech stack, conventions, and existing specs.
+1. **Read the project context.** Check for `AGENTS.md`, `CLAUDE.md`, `*.instructions.md`, or similar project instruction files. Understand the tech stack, conventions, and existing specs.
 2. **Check for existing specs.** Look in `specs/` for any `.spec.md` files. If one exists for the requested feature, warn the user and ask whether to refine the existing one or create a new version.
 3. **Check for spec template.** Load `specs/spec-template.md` as the structural reference. This is the single source of truth for spec structure.
 
